@@ -4,17 +4,14 @@ import pandas
 import matplotlib.ticker as ticker
 import tkinter as tk
 
-#id gimpera: UCFBH3Bdhgh3_cCToEQsUp6Q
-#playlista uploads gimpera: UUFBH3Bdhgh3_cCToEQsUp6Q
-#category IDs https://mixedanalytics.com/blog/list-of-youtube-video-category-ids/
+# do odpalenia programu trzeba zainstalować:
+# #google-auth-oauthlib #google-auth-httplib2 #matplotlib #pandas #google-api-python-client
 
-#do odpalenia programu trzeba zainstalować: #google-auth-oauthlib #google-auth-httplib2 #matplotlib #pandas
 
-window = tk.Tk()
-window.geometry("800x800")
-
-api_key = "AIzaSyD4MPWRUOlurNB1aClygAfWMPOrtQr1XZQ"
+api_key = ""
 youtube = build('youtube', 'v3', developerKey = api_key)
+
+szukany_kanal = input("Podaj kanal dla ktorego chcesz otrzymac statystyki: ")
 
 channel_topics = []
 topics_str = ""
@@ -28,6 +25,9 @@ category = []
 i = 0
 nextpage = ""
 q = False
+
+window = tk.Tk()
+window.geometry("800x800")
 
 
 def playlista_kanalu(channel):
@@ -82,7 +82,7 @@ def kategorie(id):
 
 
 #szukanie playlisty dla kanalu
-szukany_kanal = input("Podaj kanal dla ktorego chcesz otrzymac statystyki: ")
+
 playlist_id = playlista_kanalu(szukany_kanal)
 
 
@@ -320,8 +320,6 @@ average_coms_btn.pack()
 
 time_coms_btn = tk.Button(tk_coms, text="Liczba komenatarzy w czasie", command=time_coms_plot, pady=5)
 time_coms_btn.pack()
-
-
 
 print(data)
 window.mainloop()

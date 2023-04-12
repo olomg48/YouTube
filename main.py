@@ -4,7 +4,6 @@ import pandas
 import matplotlib.ticker as ticker
 import tkinter as tk
 
-
 #id gimpera: UCFBH3Bdhgh3_cCToEQsUp6Q
 #playlista uploads gimpera: UUFBH3Bdhgh3_cCToEQsUp6Q
 #category IDs https://mixedanalytics.com/blog/list-of-youtube-video-category-ids/
@@ -12,11 +11,13 @@ import tkinter as tk
 #do odpalenia programu trzeba zainstalować: #google-auth-oauthlib #google-auth-httplib2 #matplotlib #pandas
 
 window = tk.Tk()
+window.geometry("800x800")
 
 api_key = "AIzaSyD4MPWRUOlurNB1aClygAfWMPOrtQr1XZQ"
 youtube = build('youtube', 'v3', developerKey = api_key)
 
 channel_topics = []
+topics_str = ""
 comments = []
 likes = []
 dates = []
@@ -102,7 +103,7 @@ while (True):
             part = 'statistics, snippet, contentDetails',
             id = rep["contentDetails"]["videoId"],
         ).execute()
-        print(rep["contentDetails"]["videoId"])
+        #print(rep["contentDetails"]["videoId"])
 
         #transmisje live nie mają liczby wyświetleń
         try:
@@ -114,6 +115,8 @@ while (True):
             likes.append(int(video["items"][0]["statistics"]["likeCount"]))
             dlugosc = video["items"][0]["contentDetails"]['duration']
             dlugosc = pandas.to_timedelta(dlugosc)
+            dlugosc = dlugosc.seconds/60
+            #print(dlugosc.seconds/60)
             duration.append(dlugosc)
                 # niektóre filmy mają wyłączone komentarze
             try:
@@ -140,7 +143,7 @@ data['Published'] = dates
 data["Category"] = category
 data["Likes"] = likes
 data["Comments"] = comments
-data["Duration"] = duration
+data["Duration [m]"] = duration
 
 #tworzy formatter, który ustawia format wykresu na taki z liczbami numerycznymi a nie w formacie naukowym
 formatter = ticker.ScalarFormatter(useMathText=True)
@@ -172,7 +175,7 @@ avg_likes_all = int(data["Likes"].mean())
 avg_coms_all = int(data["Comments"].mean())
 
 #funkcja do rysowania wykresu ze średnią wyświetleń/lajków/komentarzy per kategoria
-def average_plot(column):
+def average_plot(column, color):
 
         if(column == "Likes"):
             avg = avg_likes
@@ -189,7 +192,7 @@ def average_plot(column):
 
         # tworzy wykres, bar chart, nadaje tytuł i osie
         avg_plot = avg.plot(kind="bar", title=f"Average {column} count by category for {szukany_kanal}",
-                                        x="Category", y=f"{column}")
+                                        x="Category", y=f"{column}", color = color)
 
         # ustawia formatter dla osi y, żeby liczby były pokazywane numerycznie a nie naukowo
         avg_plot.yaxis.set_major_formatter(formatter)
@@ -209,10 +212,10 @@ def average_plot(column):
 
 
 #funkcja do rysowania wykresu przedstawiającego liczbę wyświetleń/lajków/komentarzy w czasie
-def time_plot(column):
+def time_plot(column, color):
 
     # utworzenie wykresu pokazującego wyświetlenia w czasie
-    time_data = data.plot(kind="line", title=f"{column} count by time for {szukany_kanal}", x="Published", y=f"{column}")
+    time_data = data.plot(kind="line", title=f"{column} count by time for {szukany_kanal}", x="Published", y=f"{column}", color = color)
 
     # ustawienie formattera dla drugiego wykresu
     time_data.yaxis.set_major_formatter(formatter)
@@ -221,63 +224,105 @@ def time_plot(column):
     # pokazanie wykresu
     pyplot.show()
 
+
+
+# funkcje do wyświetlania wykresów uruchamiane przez tkintera
 def average_likes_plot():
-    average_plot("Likes")
+    average_plot("Likes", "hotpink")
 
 def average_views_plot():
-    average_plot("Views")
+    average_plot("Views", "turquoise")
 
 def average_coms_plot():
-    average_plot("Comments")
+    average_plot("Comments", "lime")
 
 def time_views_plot():
-    time_plot("Views")
+    time_plot("Views", "turquoise")
 
 def time_coms_plot():
-    time_plot("Comments")
+    time_plot("Comments", "lime")
 
 def time_likes_plot():
-    time_plot("Likes")
+    time_plot("Likes", "hotpink")
 
 
-average_views_btn = tk.Button(window, text = "Srednie wyswietlenia", command=average_views_plot)
+#LABELE
+tytul = tk.Label(window, text = f"Analiza dla kanalu {szukany_kanal}", font = ("Arial", 25))
+tytul.pack()
+
+for topic_str in channel_topics:
+    topics_str += topic_str + ", "
+label8 = tk.Label(window, text=f"Tematy kanalu: {topics_str[:-2]}", font = ("Arial", 15))
+label8.pack()
+
+label2 = tk.Label(window, text=f"Liczba filmow z podzialem na kategorie: \n {cat_count}", pady=5, font=("Arial", 13))
+label2.pack()
+
+label11 = tk.Label(window, text=f"Sredni czas trwania filmu: {round(data['Duration [m]'].mean(),2)}min.", font=("Arial", 13))
+label11.pack()
+
+tk_views = tk.LabelFrame(window, text="Analiza liczby wyswietlen", width=500, height=150)
+#wyłącza dostosowanie rozmiaru LabelFrame do rozmiarów labeli i buttonów wewnątrz niej
+tk_views.pack_propagate(False)
+tk_views.pack(pady = 15)
+
+tk_coms = tk.LabelFrame(window, text="Analiza liczby komentarzy",width=500, height=170)
+tk_coms.pack_propagate(False)
+tk_coms.pack(pady = 15)
+
+tk_likes = tk.LabelFrame(window, text="Analiza liczby lajkow",width=500, height=170)
+tk_likes.pack_propagate(False)
+tk_likes.pack(pady = 15)
+
+label1 = tk.Label(tk_views, text=f"Najwieksza srednia liczba wyswietlen na film: {top_cat_views}", pady=2)
+label1.pack()
+
+label3 = tk.Label(tk_views, text = f"Srednia wyswietlen dla wszystkich filmow: {avg_views_all}", pady=2)
+label3.pack()
+
+label9 = tk.Label(tk_coms, text=f"Najwieksza srednia liczba komentarzy na film: {top_cat_coms}", pady=2)
+label9.pack()
+
+label10 = tk.Label(tk_likes, text=f"Najwieksza srednia liczba lajkow na film: {top_cat_likes}", pady=2)
+label10.pack()
+
+label4 = tk.Label(tk_likes, text = f"Srednia lajkow dla wszystkich filmow: {avg_likes_all}", pady=2)
+label4.pack()
+
+label7 = tk.Label(tk_likes, text=f"Srednia liczba lajkow na wyswietlenie: {round(avg_likes_all/avg_views_all,3)}", pady=2)
+label7.pack()
+
+
+label5 = tk.Label(tk_coms, text = f"Srednia komentarzy dla wszystkich filmow: {avg_coms_all}", pady=2)
+label5.pack()
+
+label6 = tk.Label(tk_coms, text=f"Srednia liczba komentarzy na wyswietlenie: {round(avg_coms_all/avg_views_all,3)}", pady=2)
+label6.pack()
+
+
+
+# PRZYCISKI
+
+average_views_btn = tk.Button(tk_views, text = "Srednia liczba wyswietlen na kategorie", command=average_views_plot, pady=5)
 average_views_btn.pack()
 
-time_views_btn = tk.Button(window, text="Ilosc wyswietlen w czasie", command=time_views_plot)
+time_views_btn = tk.Button(tk_views, text="Liczba wyswietlen w czasie", command=time_views_plot, pady=5)
 time_views_btn.pack()
 
-average_likes_btn = tk.Button(window, text = "Srednie lajki", command=average_likes_plot)
+average_likes_btn = tk.Button(tk_likes, text = "Srednia liczba lajkow na kategorie", command=average_likes_plot, pady=5)
 average_likes_btn.pack()
 
-time_likes_btn = tk.Button(window, text="Ilosc lajkow w czasie", command=time_likes_plot)
+time_likes_btn = tk.Button(tk_likes, text="Liczba lajkow w czasie", command=time_likes_plot, pady=5)
 time_likes_btn.pack()
 
-average_coms_btn = tk.Button(window, text = "Srednie komentarze", command=average_coms_plot)
+average_coms_btn = tk.Button(tk_coms, text = "Srednia liczba komentarzy na kategorie", command=average_coms_plot, pady=5)
 average_coms_btn.pack()
 
-time_coms_btn = tk.Button(window, text="Ilosc komenatarzy w czasie", command=time_coms_plot)
+time_coms_btn = tk.Button(tk_coms, text="Liczba komenatarzy w czasie", command=time_coms_plot, pady=5)
 time_coms_btn.pack()
 
 
-label1 = tk.Label(window, text=f"Kategoria z najwieksza srednia liczba wyswietlen na film: {top_cat_views}")
-label1.pack()
 
-label2 = tk.Label(window, text=f"Liczba filmow z podzialem na kategorie: \n {cat_count}")
-label2.pack()
-
-label3 = tk.Label(window, text = f"Srednia wyswietlen dla wszystkich filmow: {avg_views_all}")
-label3.pack()
-
-label4 = tk.Label(window, text = f"Srednia lajkow dla wszystkich filmow: {avg_likes_all}")
-label4.pack()
-
-label5 = tk.Label(window, text = f"Srednia komentarzy dla wszystkich filmow: {avg_coms_all}")
-label5.pack()
-
-wykres = data.plot(kind = "scatter", x="Duration", y="Views")
-wykres.yaxis.set_major_formatter(formatter)
-
-pyplot.show()
 print(data)
 window.mainloop()
 data.to_excel("siema13.xlsx")

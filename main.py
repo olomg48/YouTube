@@ -13,7 +13,7 @@ import tkinter as tk
 window = tk.Tk()
 window.geometry("800x800")
 
-api_key = "AIzaSyD4MPWRUOlurNB1aClygAfWMPOrtQr1XZQ"
+api_key = ""
 youtube = build('youtube', 'v3', developerKey = api_key)
 
 channel_topics = []

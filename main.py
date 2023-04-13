@@ -7,8 +7,8 @@ import tkinter as tk
 # do odpalenia programu trzeba zainstalować:
 # #google-auth-oauthlib #google-auth-httplib2 #matplotlib #pandas #google-api-python-client
 
-
-api_key = ""
+#
+api_key = "AIzaSyD4MPWRUOlurNB1aClygAfWMPOrtQr1XZQ"
 youtube = build('youtube', 'v3', developerKey = api_key)
 
 szukany_kanal = input("Podaj kanal dla ktorego chcesz otrzymac statystyki: ")
@@ -191,7 +191,7 @@ def average_plot(column, color):
         pyplot.figure(figsize=(12, 14))
 
         # tworzy wykres, bar chart, nadaje tytuł i osie
-        avg_plot = avg.plot(kind="bar", title=f"Average {column} count by category for {szukany_kanal}",
+        avg_plot = avg.plot(kind="bar", title=f"Average {column} number by category for {szukany_kanal}",
                                         x="Category", y=f"{column}", color = color)
 
         # ustawia formatter dla osi y, żeby liczby były pokazywane numerycznie a nie naukowo
@@ -215,7 +215,7 @@ def average_plot(column, color):
 def time_plot(column, color):
 
     # utworzenie wykresu pokazującego wyświetlenia w czasie
-    time_data = data.plot(kind="line", title=f"{column} count by time for {szukany_kanal}", x="Published", y=f"{column}", color = color)
+    time_data = data.plot(kind="line", title=f"{column} number by time for {szukany_kanal}", x="Published", y=f"{column}", color = color)
 
     # ustawienie formattera dla drugiego wykresu
     time_data.yaxis.set_major_formatter(formatter)
@@ -323,5 +323,7 @@ time_coms_btn.pack()
 
 print(data)
 window.mainloop()
-data.to_excel("siema13.xlsx")
+
+#zapisanie do excela do dalszej analizy
+data.to_excel("dane_z_youtube.xlsx")
 

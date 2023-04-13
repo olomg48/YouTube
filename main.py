@@ -8,7 +8,7 @@ import tkinter as tk
 # #google-auth-oauthlib #google-auth-httplib2 #matplotlib #pandas #google-api-python-client
 
 #
-api_key = "AIzaSyD4MPWRUOlurNB1aClygAfWMPOrtQr1XZQ"
+api_key = ""
 youtube = build('youtube', 'v3', developerKey = api_key)
 
 szukany_kanal = input("Podaj kanal dla ktorego chcesz otrzymac statystyki: ")

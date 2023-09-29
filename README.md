@@ -1,22 +1,17 @@
-My program allows to analyze YouTube channels data by category and number of views/likes/comments It requires API key for YouTube Data API.
-You can analyze data for any YouTube channel. Program searches for name of the channel and shows you statistics
-This video show how you can get your API key: https://youtu.be/th5_9woFJmk?t=34.
-I used pandas dataframe to store formatted data, and matplotlib to visualize data from pandas DataFrames. I alsob built GUI with tkinter wich allowes to
-show matplotlib charts.
-Program counts some most important statistical measures, like sum or mean, for likes, comments, views and duration of video.
+Welcome to my repository!
+This is my project about analyzing YouTube data with YouTubeAPI, Python, and PowerBI.
+In "search_for_new_videos.py", you can find my solution to load data from YouTubeAPI into Azure Blob Storage. Then, my output CSV file is loaded with Azure Data Factory into an MS SQL Server database, and I can analyze this data with a Power BI dashboard. My dashboard can be accessed from this link: https://www.novypro.com/project/youtube-data-analysis
 
-Tkinter interface for examplary channel:
-![image](https://user-images.githubusercontent.com/60153574/231794408-7b89810f-871c-4015-a9ac-1ef1ae1101e2.png)
+In my database, there is data about a few YouTube channels and all their videos. New videos are being added to the database every day at 9 PM. On my Power BI dashboard, you can track trends in views and video count, check viewers' engagement rate, or see the correlation between views and video duration for different video categories over different periods of time.
 
-Buttons can show charts like this:
-![image](https://user-images.githubusercontent.com/60153574/231794785-2ddf1175-2c97-4763-9f00-bc0439aef677.png)
+Key technologies:
+ - YouTube API
+ - Microsoft Power BI
+ - DAX
+ - Python (pandas)
+ - Azure Blob Storage
+ - Azure Data Factory
+ - MS SQL Server
 
-Or this:
-![image](https://user-images.githubusercontent.com/60153574/231794881-df88c28a-c90d-4241-a4ef-234ef88e0da1.png)
 
-You have to install few python modules:
-google-auth-oauthlib 
-google-auth-httplib2 
-matplotlib 
-pandas 
-google-api-python-client
+In "studies_project.py", there is a small python program, that collects data from YouTube API, and analyzes it with Python pandas and matplotlub. I also created some basic GUI with Tkinter. It provides only basic analysis, but this project allowed me to learn how to work with API and make basic visuals in Python

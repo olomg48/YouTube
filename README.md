@@ -12,6 +12,3 @@ Key technologies:
  - Azure Blob Storage
  - Azure Data Factory
  - MS SQL Server
-
-
-In "studies_project.py", there is a small python program, that collects data from YouTube API, and analyzes it with Python pandas and matplotlub. I also created some basic GUI with Tkinter. It provides only basic analysis, but this project allowed me to learn how to work with API and make basic visuals in Python
